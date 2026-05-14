@@ -20,10 +20,10 @@ class Job(SQLModel, table=True):
     company_description: str | None = Field(default=None)
     views: int | None = Field(default=0)
     applicants: int | None = Field(default=0)
-    date_posted: datetime = Field(default_factory=lambda: datetime.now(timezone.utc()))
+    date_posted: datetime = Field(default_factory=datetime.utcnow)
 
     company: Optional["Company"] = Relationship(back_populates="jobs")
 
-    application: List["Application"] = Relationship(back_populates="job")
+    applications: List["Application"] = Relationship(back_populates="job")
 
     skills: List["Skill"] = Relationship(back_populates="jobs", link_model=JobSkillLink)
