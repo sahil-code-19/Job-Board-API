@@ -5,14 +5,15 @@ from ..database import get_db
 from ..schemas.job import JobCreate, JobResponse, JobUpdate
 from ..schemas.common import PaginatedResponse, ErrorResponse
 from ..schemas.filters import JobFilter
+from ..auth.dependencies import EmployerUser
 
 from ..crud import job as crud
 
-router = APIRouter(prefix="/jobs")
+router = APIRouter(prefix="/jobs", tags=["Job"])
 
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_model=JobResponse)
-async def job_create(job_create: JobCreate, db: AsyncSession = Depends(get_db)):
-    return await crud.create_job(db, job_create.model_dump(exclude={"company", "skills"}))
+async def job_create(job_create: JobCreate, current_user: EmployerUser, db: AsyncSession = Depends(get_db)):
+    return await crud.create_job(db, job_create.model_dump())
 
 
 @router.get('/all', status_code=status.HTTP_200_OK, response_model=PaginatedResponse[JobResponse])
