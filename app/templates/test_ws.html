@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Notifications Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>WebSocket Notifications Tester</h2>
+
+    <p>1. Get a Candidate's Access Token by logging in via Swagger UI.<br>
+        2. Paste it below and click Connect.</p>
+
+    <label>Access Token:</label><br>
+    <input type="text" id="token" style="width: 500px;"><br><br>
+    <button onclick="connect()">Connect</button>
+
+    <hr>
+    <h3>Live Notifications:</h3>
+    <ul id='messages'></ul>
+
+    <script>
+        let ws;
+        function connect() {
+            const token = document.getElementById("token").value;
+            if (!token) {
+                alert("Please enter a token!");
+                return;
+            }
+
+            // Connect to your FastAPI WebSocket Endpoint
+            ws = new WebSocket("ws://localhost:8000/api/ws/notifications?token=" + token);
+
+            ws.onopen = function (event) {
+                appendMessage("🟢 Connected to WebSocket successfully.");
+            };
+
+            ws.onmessage = function (event) {
+                appendMessage("🔔 Notification Received: " + event.data);
+            };
+
+            ws.onclose = function (event) {
+                appendMessage("🔴 Disconnected from WebSocket.");
+            };
+
+            ws.onerror = function (event) {
+                appendMessage("❌ Error: Check the console for details.");
+                console.error("WebSocket error observed:", event);
+            };
+        }
+
+        function appendMessage(text) {
+            const messages = document.getElementById('messages');
+            const message = document.createElement('li');
+            message.style.margin = "10px 0";
+            const content = document.createTextNode(text);
+            message.appendChild(content);
+            messages.appendChild(message);
+        }
+    </script>
+</body>
+
+</html>

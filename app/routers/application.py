@@ -1,7 +1,8 @@
-import shutil
+import aiofiles
+import asyncio
 import os
 
-from fastapi import APIRouter, status, HTTPException, Depends, File, UploadFile, Form, BackgroundTasks
+from fastapi import APIRouter, status, HTTPException, Depends, File, UploadFile, Form, BackgroundTasks, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from typing import Annotated, List
@@ -12,6 +13,8 @@ from ..models.user import User
 from ..crud.application import apply_job
 from ..auth.dependencies import get_current_user
 from ..service.email import send_email
+from ..service.notifications import create_and_push
+from ..schemas.application import StatusUpdateSchema
 
 router = APIRouter(prefix="/application", tags=["application"])
 
@@ -37,15 +40,14 @@ async def create_application(file: Annotated[UploadFile, File(description="A fil
     MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
     file_size = 0
 
-    with open(file_location, "wb") as buffer:
+    async with aiofiles.open(file_location, "wb") as buffer:
         while chunk := await file.read(1024 * 1024):
             file_size += len(chunk)
             if file_size > MAX_FILE_SIZE:
-                buffer.close()
-                os.remove(file_location)
+                await buffer.close()
+                await asyncio.to_thread(os.remove, file_location)
                 raise HTTPException(status_code=400, detail="File too large")
-
-            buffer.write(chunk)
+            await buffer.write(chunk)
 
     application = await apply_job(db, file_location, current_user.id, job_id, cover_letter)
 
@@ -62,3 +64,27 @@ async def create_application(file: Annotated[UploadFile, File(description="A fil
         status_code=400,
         detail="Can't apply! try again."
     )
+
+@router.post("/application/{id}/status")
+async def update_status(
+    id: int,
+    body: StatusUpdateSchema,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    app_obj = await db.get(Application, id)
+    old_status = app_obj.status
+    app_obj.status = body.status
+    await db.commit()
+    await db.refresh(app_obj)
+
+    redis_client = request.app.state.redis
+    await create_and_push(
+        db=db,
+        redis=redis_client,
+        user_id=app_obj.candidate_id,
+        message=f"Application status changed : {old_status} -> {body.status}"
+    )
+
+    return app_obj

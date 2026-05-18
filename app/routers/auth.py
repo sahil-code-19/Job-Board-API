@@ -61,6 +61,8 @@ async def login_for_swagger(
     
     access_token = create_access_token({"sub": str(user.id)})
     refresh_token = create_refresh_token({"sub": str(user.id)})
+    print(f"Access token: {access_token}")
+    print(f"Refresh token: {refresh_token}")
     return Token(access_token=access_token, refresh_token=refresh_token)
 
 
