@@ -1,12 +1,15 @@
+import os
 import httpx
 
-RESEND_API_KEY = "re_eMxFw6Fr_KeZiSCL4n2NvC1fT4AW62twc"
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def send_email(to_email: str, subject: str, body: str):
     url = "https://api.resend.com/emails"
 
     headers = {
-        "Authorization": f"Bearer {RESEND_API_KEY}",
+        "Authorization": f"Bearer {os.getenv('RESEND_API_KEY')}",
         "Content-Type": "application/json",
     }
 
