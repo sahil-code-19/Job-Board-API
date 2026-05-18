@@ -19,7 +19,7 @@ UPLOAD_DIR = "static/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/apply", status_code=status.HTTP_201_CREATED)
-async def create_application(file: Annotated[UploadFile, File(description="A file read as UploadFile")], background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), job_id: int = Form(), current_user: User = Depends(get_current_user), status: ApplicationStatus = Form(default=ApplicationStatus.pending ), cover_letter: str = Form(default=None)):
+async def create_application(file: Annotated[UploadFile, File(description="A file read as UploadFile")], background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), job_id: int = Form(), current_user: User = Depends(get_current_user), cover_letter: str = Form(default=None)):
     ALLOWED_TYPES = [
         "application/pdf",
         "application/msword",
@@ -47,14 +47,14 @@ async def create_application(file: Annotated[UploadFile, File(description="A fil
 
             buffer.write(chunk)
 
-    application = await apply_job(db, file_location, current_user.id, job_id, status, cover_letter)
+    application = await apply_job(db, file_location, current_user.id, job_id, cover_letter)
 
     if application:
         background_tasks.add_task(
         send_email,
-        "sahilk.softcolon@gmail.com",
-        "Welcome",
-        "Hello from FastAPI 🚀"
+        "delivered@resend.dev",
+        f"Welcome",
+        "You have applied successfully 🚀"
     )
         return application
     
