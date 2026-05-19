@@ -28,7 +28,7 @@ async def list_job(db: AsyncSession, filters: JobFilter, skip: int = 0, limit: i
     if filters.job_type:
         query = query.where(Job.job_type == filters.job_type)
     if filters.job_category:
-        query = query.where(Job.job_category == filters.job_category)\
+        query = query.where(Job.job_category == filters.job_category)
     
 
     query = query.offset(skip).limit(limit)

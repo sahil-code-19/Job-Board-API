@@ -38,7 +38,7 @@ async def login(data: UserLogin, db: AsyncSession = Depends(get_db)):
     if not user:
         raise HTTPException(
             status_code=400,
-            detail="User not exist!"
+            detail="User not exist or user is inactive!"
         )
     
     access_token = create_access_token({"sub": str(user.id)})
