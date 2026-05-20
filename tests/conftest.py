@@ -104,7 +104,11 @@ async def user_token(async_client):
         "email": f"user_{unique_hex}@example.com",
         "password": "Password@123"
     })
-    yield response.json()['access_token']
+    tokens = {
+        "access_token": response.json()['access_token'], 
+        "refresh_token": response.json()['refresh_token']
+    }
+    yield tokens
 
 @pytest.fixture(scope="function")
 async def company_id(async_client, employer_token):
@@ -131,4 +135,3 @@ async def job_id(async_client, employer_token, company_id):
     }, headers={"Authorization": f"Bearer {employer_token}"})
 
     yield response.json()['id']
-

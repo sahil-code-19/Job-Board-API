@@ -1,9 +1,10 @@
 async def test_unread_notifications(async_client, user_token):
-    response = await async_client.get("/api/notifications", headers={"Authorization": f"Bearer {user_token}"})
+    response = await async_client.get("/api/notifications", headers={"Authorization": f"Bearer {user_token["access_token"]}"})
     assert response.status_code == 200
 
 async def test_mark_notification_read(async_client, user_token, db_session):
-    user_response = await async_client.get("/api/auth/me", headers={"Authorization": f"Bearer {user_token}"})
+    print(f"#######################################{user_token['access_token']}")
+    user_response = await async_client.get("/api/auth/me", headers={"Authorization": f"Bearer {user_token["access_token"]}"})
     user = user_response.json()
     user_id = user["id"]
 
@@ -24,5 +25,5 @@ async def test_mark_notification_read(async_client, user_token, db_session):
     await db_session.commit()
     await db_session.refresh(notification)
 
-    response = await async_client.post(f"/api/mark-read?id={notification.id}", headers={"Authorization": f"Bearer {user_token}"})
+    response = await async_client.post(f"/api/mark-read?id={notification.id}", headers={"Authorization": f"Bearer {user_token["access_token"]}"})
     assert response.status_code == 200
