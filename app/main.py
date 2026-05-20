@@ -16,12 +16,14 @@ from .core.limiter import limiter
 
 from .database import create_db_and_tables
 from . import models
-from .routers import job, auth, application, notifications, company
+from .routers import job, auth, application, notifications, company, health
 from .middleware.request_logging import RequestLoggingMiddleWare
 from .middleware.request_id import RequestIDMiddleWare
 from .core.logging_config import setup_logging
 from .websockets.manager import ConnectionManager
+from .core.config import get_settings
 
+settings = get_settings()
 manager = ConnectionManager()
 
 @asynccontextmanager
@@ -31,7 +33,7 @@ async def lifespan(app: FastAPI):
     await create_db_and_tables()
 
     redis = await Redis.from_url(
-        "redis://localhost",
+        settings.redis_url,
         decode_responses=True
     )
 
@@ -89,3 +91,4 @@ app.include_router(job.router, prefix="/api")
 app.include_router(application.router, prefix="/api")
 app.include_router(notifications.router, prefix="/api")
 app.include_router(company.router, prefix="/api")
+app.include_router(health.router)
