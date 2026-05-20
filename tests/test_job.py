@@ -33,8 +33,6 @@ async def test_create_job_as_candidate_forbidden(async_client, candidate_token, 
     }, headers={"Authorization": f"Bearer {candidate_token}"})
     assert response.status_code == 403
 
-
-
 async def test_create_job_missing_field(async_client, employer_token):
     # Title is missing, No company id given
     response = await async_client.post("/api/jobs/create", json={

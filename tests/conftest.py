@@ -2,10 +2,13 @@ from sqlmodel import SQLModel
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from dotenv import load_dotenv
 from httpx import AsyncClient, ASGITransport
+from io import BytesIO
+from unittest.mock import AsyncMock
 
 from app.main import app
 from app.database import get_db
 from app.core.limiter import limiter
+from app.websockets.manager import ConnectionManager
 
 import os
 import pytest
@@ -14,6 +17,9 @@ import random
 
 load_dotenv()
 
+app.state.manager = ConnectionManager()
+app.state.redis = AsyncMock()
+app.state.redis.publish = AsyncMock()
 limiter.enabled = False
 
 print(os.getenv("TEST_DATABASE_URI"))
@@ -134,4 +140,14 @@ async def job_id(async_client, employer_token, company_id):
         "company_description" : "We are ...."
     }, headers={"Authorization": f"Bearer {employer_token}"})
 
+    yield response.json()['id']
+
+@pytest.fixture(scope="function")
+async def application_id(async_client, candidate_token, job_id):
+    response = await async_client.post("/api/application/apply", data={
+        "job_id": job_id,
+        "cover_letter": "Hellow I am applying!"
+    }, files={"file": ("cv.pdf", BytesIO(b"fake pdf content"), "application/pdf")}, 
+    headers={"Authorization": f"Bearer {candidate_token}"})
+    
     yield response.json()['id']
