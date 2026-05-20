@@ -16,7 +16,7 @@ from .core.limiter import limiter
 
 from .database import create_db_and_tables
 from . import models
-from .routers import job, auth, application, notifications
+from .routers import job, auth, application, notifications, company
 from .middleware.request_logging import RequestLoggingMiddleWare
 from .middleware.request_id import RequestIDMiddleWare
 from .core.logging_config import setup_logging
@@ -88,3 +88,4 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(job.router, prefix="/api")
 app.include_router(application.router, prefix="/api")
 app.include_router(notifications.router, prefix="/api")
+app.include_router(company.router, prefix="/api")

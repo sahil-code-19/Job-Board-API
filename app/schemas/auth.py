@@ -6,6 +6,7 @@ class UserRegister(BaseModel):
     username: str
     password: str
     role: UserRole = UserRole.candidate
+    is_active: bool | None = True
 
 class UserLogin(BaseModel):
     email: str

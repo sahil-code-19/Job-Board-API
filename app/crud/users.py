@@ -30,6 +30,8 @@ async def create_user(db: AsyncSession, user_in: auth.UserRegister) -> User:
 async def authenticate_user(db: AsyncSession, email: str, password: str) -> User | None:
     user = await get_user_by_email(db, email)
 
+    if user.is_active == False:
+        return None
     if not user:
         verify_password(password, DUMMY_HASH)
         return None

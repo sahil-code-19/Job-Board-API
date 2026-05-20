@@ -18,7 +18,6 @@ async def ws_notifications(
 ):
     user = decode_token(token)
 
-    print(user)
     if not user:
         await websocket.close(code=1008)
         return
@@ -47,7 +46,7 @@ async def unread_notificaftions(
 
     return result.scalars().all()
 
-@router.get("/mark-read")
+@router.post("/mark-read")
 async def mark_read(
     id : int,
     current_user : User = Depends(get_current_user),

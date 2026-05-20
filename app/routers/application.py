@@ -65,12 +65,11 @@ async def create_application(file: Annotated[UploadFile, File(description="A fil
         detail="Can't apply! try again."
     )
 
-@router.post("/application/{id}/status")
+@router.post("/{id}/status")
 async def update_status(
     id: int,
     body: StatusUpdateSchema,
     request: Request,
-    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     app_obj = await db.get(Application, id)
