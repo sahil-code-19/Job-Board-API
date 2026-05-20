@@ -11,11 +11,7 @@ from .core.limiter import limiter
 
 from .database import create_db_and_tables
 from . import models
-<<<<<<< Updated upstream
-from .routers import job, auth, application
-=======
 from .routers import job, auth, application, notifications, company
->>>>>>> Stashed changes
 from .middleware.request_logging import RequestLoggingMiddleWare
 from .middleware.request_id import RequestIDMiddleWare
 from .core.logging_config import setup_logging
@@ -54,10 +50,6 @@ app.add_middleware(RequestIDMiddleWare)
 app.add_middleware(RequestLoggingMiddleWare)
 app.include_router(auth.router, prefix="/api")
 app.include_router(job.router, prefix="/api")
-<<<<<<< Updated upstream
-app.include_router(application.router, prefix="/api")
-=======
 app.include_router(application.router, prefix="/api")
 app.include_router(notifications.router, prefix="/api")
 app.include_router(company.router, prefix="/api")
->>>>>>> Stashed changes
