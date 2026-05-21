@@ -1,0 +1,59 @@
+name: CI workflow for our project
+
+on:
+  push:
+    branches: [main, feature/phase-7-deployment-docker]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Checkout the python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Run ruff
+        run: ruff check .
+
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: sqlite+aiosqlite:///./test.db
+      TEST_DATABASE_URI: sqlite+aiosqlite:///./test.db
+      SECRET_KEY: TEST_SECRECT_KEY_88292NHHJ
+      RESEND_API_KEY: test_resend_api_key
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Checkout the python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install all dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run TEST
+        run: pytest --cov=app
+
+  docker:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run docker
+        run: docker build -t job-board:latest .
+
+      
