@@ -1,5 +1,4 @@
 import uuid
-import time
 import logging
 
 from fastapi import Request

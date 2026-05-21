@@ -1,10 +1,6 @@
 import jwt
-import os
 
-from jwt.exceptions import InvalidTokenError
 from datetime import datetime, timezone, timedelta
-
-from typing import Optional 
 
 from ..core.config import get_settings
 

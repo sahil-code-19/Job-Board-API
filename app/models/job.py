@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import List, Optional
 
 from .skill import JobSkillLink

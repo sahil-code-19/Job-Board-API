@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, List, TYPE_CHECKING
+from typing import List
 
 class JobSkillLink(SQLModel, table=True):
     __tablename__ = "job_skill_links"

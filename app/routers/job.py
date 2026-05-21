@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException, Query, Depends
+from fastapi import APIRouter, status, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
@@ -65,7 +65,7 @@ async def full_edit_job(job_id: int, data: JobUpdate, db: AsyncSession = Depends
 @router.delete('/delete/{job_id}', response_model=JobResponse, status_code=status.HTTP_200_OK, responses={404: {"model": ErrorResponse}})
 async def delete_job(job_id: int, db: AsyncSession = Depends(get_db)):
     result = await crud.delete_job(db, job_id)
-    if result == False:
+    if not result:
         raise HTTPException(
             status_code=404,
             detail={"detail": "Job not found", "error_code": "JOB_NOT_FOUND"}

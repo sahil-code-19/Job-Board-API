@@ -53,7 +53,7 @@ async def test_login_inactive_user(async_client):
     assert response.status_code == 200
 
 async def test_refresh_token_user_success(async_client, user_token):
-    response = await async_client.post(f"/api/auth/refresh", json={
+    response = await async_client.post("/api/auth/refresh", json={
         "refresh_token" : f"{user_token["refresh_token"]}"
     })
     assert response.status_code == 200

@@ -1,3 +1,5 @@
+from fastapi.security import OAuth2PasswordRequestForm
+from typing import Annotated
 from jwt.exceptions import InvalidTokenError
 from fastapi import status, Depends, HTTPException, APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -45,9 +47,6 @@ async def login(data: UserLogin, db: AsyncSession = Depends(get_db)):
     refresh_token = create_refresh_token({"sub": str(user.id)})
 
     return Token(access_token=access_token, refresh_token=refresh_token)
-    
-from fastapi.security import OAuth2PasswordRequestForm
-from typing import Annotated
 
 @router.post("/token", include_in_schema=False)
 async def login_for_swagger(

@@ -1,10 +1,8 @@
-import redis
 import json
 import asyncio
 from redis.asyncio import Redis
 
-from fastapi import FastAPI, Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,7 +13,6 @@ from slowapi.middleware import SlowAPIMiddleware
 from .core.limiter import limiter
 
 from .database import create_db_and_tables
-from . import models
 from .routers import job, auth, application, notifications, company, health
 from .middleware.request_logging import RequestLoggingMiddleWare
 from .middleware.request_id import RequestIDMiddleWare

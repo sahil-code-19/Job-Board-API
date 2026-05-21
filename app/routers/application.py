@@ -5,10 +5,10 @@ import os
 from fastapi import APIRouter, status, HTTPException, Depends, File, UploadFile, Form, BackgroundTasks, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from typing import Annotated, List
+from typing import Annotated
 
 from ..database import get_db
-from ..models.application import ApplicationStatus, Application
+from ..models.application import Application
 from ..models.user import User
 from ..crud.application import apply_job
 from ..auth.dependencies import get_current_user
@@ -55,7 +55,7 @@ async def create_application(file: Annotated[UploadFile, File(description="A fil
         background_tasks.add_task(
         send_email,
         "delivered@resend.dev",
-        f"Welcome",
+        "Welcome",
         "You have applied successfully 🚀"
     )
         return application
