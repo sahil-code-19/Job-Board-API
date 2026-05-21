@@ -38,6 +38,12 @@ async def lifespan(app: FastAPI):
     app.state.manager = manager
     
     app.state.listener_task = asyncio.create_task(redis_listener(app))
+    
+    app.state.metrics = {
+        "total_requests": 0,
+        "total_errors": 0,
+        "total_latency_ms": 0.0
+    }
 
     print("Startup complete")
     yield

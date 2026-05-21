@@ -11,7 +11,12 @@ class RequestLoggingMiddleWare(BaseHTTPMiddleware):
         start_time = time.perf_counter()
         response = await call_next(request)
         process_time = time.perf_counter() - start_time
-        
+
+        request.app.state.metrics["total_requests"] += 1
+        request.app.state.metrics["total_latency_ms"] += process_time*1000
+        if response.status_code >= 400:
+            request.app.state.metrics["total_errors"] += 1
+
         logger.info(
             f"{request.method} {request.url.path}"
             f"Status {response.status_code}"

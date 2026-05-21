@@ -27,3 +27,20 @@ async def check_health(request: Request, db: AsyncSession = Depends(get_db)):
         )
     
     return {"status": "ok", "database": "ok", "redis": "ok"}
+
+@router.get("/metrics", status_code=status.HTTP_200_OK)
+async def get_metrics(request: Request):
+    try:
+        metrics = request.app.state.metrics
+        avg_latency = metrics["total_latency_ms"] / metrics["total_requests"] if metrics["total_requests"] != 0 else 0.0
+    except Exception:
+        raise HTTPException(
+            status_code=500,
+            detail="Some Problems occured"
+        )
+    
+    return {
+        "average_latency" : avg_latency,
+        "total_requests" : metrics["total_requests"],
+        "total_errors" : metrics["total_errors"]
+    }
