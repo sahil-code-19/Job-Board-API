@@ -11,9 +11,9 @@ RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 COPY --from=builder /install /usr/local
 COPY ./app /code/app
 COPY ./alembic /code/alembic
-COPY ./static /code/static
 COPY ./seed.py /code/seed.py
 COPY ./alembic.ini /code/alembic.ini
+RUN mkdir -p /code/static
 
 RUN chown -R appuser:appgroup /code
 USER appuser
