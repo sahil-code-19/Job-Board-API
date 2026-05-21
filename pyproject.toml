@@ -12,6 +12,7 @@ dependencies = [
     "email-validator>=2.3.0",
     "fastapi[standard]>=0.136.1",
     "httpx>=0.28.1",
+    "mypy>=2.1.0",
     "psycopg2-binary>=2.9.12",
     "pwdlib[argon2]>=0.3.0",
     "pydantic-settings>=2.14.1",
@@ -21,6 +22,7 @@ dependencies = [
     "pytest-cov>=7.1.0",
     "python-dotenv>=1.2.2",
     "redis>=7.4.0",
+    "ruff>=0.15.13",
     "slowapi>=0.1.9",
     "sqlmodel>=0.0.38",
 ]
@@ -35,3 +37,6 @@ omit = ["*/migrations/*","*/tests/*"]
 
 [tool.coverage.report]
 show_missing = true
+
+[tool.ruff]
+exclude = ["app/models"]
