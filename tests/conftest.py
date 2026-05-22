@@ -20,11 +20,6 @@ load_dotenv()
 app.state.manager = ConnectionManager()
 app.state.redis = AsyncMock()
 app.state.redis.publish = AsyncMock()
-app.state.metrics = {
-    "total_requests": 0,
-    "total_errors": 0,
-    "total_latency_ms": 0.0
-}
 limiter.enabled = False
 
 DATABASE_URL = os.getenv("TEST_DATABASE_URI")
