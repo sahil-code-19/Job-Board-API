@@ -4,7 +4,6 @@ from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..models.notification import Notification
-from ..websockets.manager import ConnectionManager
 
 async def create_and_push(
     db: AsyncSession,

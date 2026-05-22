@@ -22,7 +22,6 @@ app.state.redis = AsyncMock()
 app.state.redis.publish = AsyncMock()
 limiter.enabled = False
 
-print(os.getenv("TEST_DATABASE_URI"))
 DATABASE_URL = os.getenv("TEST_DATABASE_URI")
 
 engine = create_async_engine(DATABASE_URL, echo=True)

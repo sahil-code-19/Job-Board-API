@@ -1,4 +1,4 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Request, Depends, HTTPException
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, HTTPException
 
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +28,7 @@ async def ws_notifications(
 
     try:
         while True:
-            data = await websocket.receive_text()
+            await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect(user_id, websocket)
 
@@ -40,7 +40,7 @@ async def unread_notificaftions(
     result = await db.execute(
         select(Notification)
         .where(Notification.user_id == current_user.id)
-        .where(Notification.is_read == False)
+        .where(not Notification.is_read)
         .order_by(Notification.created_at.desc())
     )
 

@@ -1,0 +1,14 @@
+.venv
+.pytest_cache
+htmlcov
+logs
+tests
+.coverage
+test.db
+*.pyc
+__pycache__
+.env
+.git
+.gitignore
+secrets.txt
+uv.lock

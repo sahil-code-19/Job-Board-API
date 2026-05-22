@@ -1,7 +1,4 @@
-from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from typing import List
 
 from ..models import Application
 

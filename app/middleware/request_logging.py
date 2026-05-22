@@ -1,7 +1,6 @@
 import time
 import logging
 
-from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
 
@@ -12,7 +11,16 @@ class RequestLoggingMiddleWare(BaseHTTPMiddleware):
         start_time = time.perf_counter()
         response = await call_next(request)
         process_time = time.perf_counter() - start_time
-        
+
+        try:
+            redis = request.app.state.redis
+            await redis.incr("metrics:total_requests") 
+            await redis.incrbyfloat("metrics:total_latency_ms", process_time)
+            if response.status_code >= 400:
+                await redis.incr("metrics:total_errors")
+        except Exception:
+            pass
+
         logger.info(
             f"{request.method} {request.url.path}"
             f"Status {response.status_code}"

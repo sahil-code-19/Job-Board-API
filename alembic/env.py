@@ -8,7 +8,7 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from sqlmodel import SQLModel
 
-import app.models
+from app.database import DATABASE_URL
 
 config = context.config
 
@@ -17,7 +17,6 @@ if config.config_file_name is not None:
 
 target_metadata = SQLModel.metadata
 
-from app.database import DATABASE_URL
 sync_url = DATABASE_URL.replace("+asyncpg", "+psycopg2")
 config.set_main_option("sqlalchemy.url", sync_url)
 

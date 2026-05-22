@@ -1,9 +1,8 @@
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional
 
 from ..models.user import User
-from ..core.security import hash_password, pwd_hasher, DUMMY_HASH, verify_password
+from ..core.security import hash_password, DUMMY_HASH, verify_password
 from ..schemas import auth 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
@@ -30,7 +29,7 @@ async def create_user(db: AsyncSession, user_in: auth.UserRegister) -> User:
 async def authenticate_user(db: AsyncSession, email: str, password: str) -> User | None:
     user = await get_user_by_email(db, email)
 
-    if user.is_active == False:
+    if not user.is_active:
         return None
     if not user:
         verify_password(password, DUMMY_HASH)

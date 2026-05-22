@@ -9,8 +9,6 @@ DB config is read from app/.env  (DATABASE_URL)
 
 import asyncio
 import asyncpg
-import os
-import re
 import sys
 from pathlib import Path
 

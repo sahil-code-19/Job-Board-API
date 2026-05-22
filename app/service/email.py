@@ -1,15 +1,14 @@
-import os
 import httpx
 
-from dotenv import load_dotenv
+from ..core.config import get_settings
 
-load_dotenv()
+settings = get_settings()
 
 async def send_email(to_email: str, subject: str, body: str):
     url = "https://api.resend.com/emails"
 
     headers = {
-        "Authorization": f"Bearer {os.getenv('RESEND_API_KEY')}",
+        "Authorization": f"Bearer {settings.resend_api_key}",
         "Content-Type": "application/json",
     }
 
