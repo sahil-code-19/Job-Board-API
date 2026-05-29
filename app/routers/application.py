@@ -82,7 +82,7 @@ async def create_application(
     raise HTTPException(status_code=400, detail="Can't apply! try again.")
 
 
-@router.post("/{id}/status", status_code=status.HTTP_200_OK)
+@router.post("/{id}/status")
 async def update_status(
     id: int,
     body: StatusUpdateSchema,
