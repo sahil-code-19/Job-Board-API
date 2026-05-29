@@ -11,17 +11,15 @@ from ..models.notification import Notification
 
 router = APIRouter(tags=["Notifications"])
 
+
 @router.websocket("/ws/notifications")
-async def ws_notifications(
-    websocket: WebSocket,
-    token: str
-):
+async def ws_notifications(websocket: WebSocket, token: str):
     user = decode_token(token)
 
     if not user:
         await websocket.close(code=1008)
         return
-    
+
     manager = websocket.app.state.manager
     user_id = int(user["sub"])
     await manager.connect(user_id, websocket)
@@ -32,10 +30,11 @@ async def ws_notifications(
     except WebSocketDisconnect:
         manager.disconnect(user_id, websocket)
 
+
 @router.get("/notifications")
 async def unread_notificaftions(
     current_user: User = Depends(get_current_user),
-    db : AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
         select(Notification)
@@ -46,17 +45,18 @@ async def unread_notificaftions(
 
     return result.scalars().all()
 
-@router.post("/mark-read")
+
+@router.post("/mark-read", status_code=status.HTTP_200_OK)
 async def mark_read(
-    id : int,
-    current_user : User = Depends(get_current_user),
-    db : AsyncSession = Depends(get_db)
+    id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
     notif = await db.get(Notification, id)
 
     if not notif or notif.user_id != current_user.id:
         raise HTTPException(status_code=404)
-    
+
     notif.is_read = True
     await db.commit()
     await db.refresh(notif)

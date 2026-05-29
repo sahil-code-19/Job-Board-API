@@ -14,7 +14,7 @@ async def create_job(db: AsyncSession, job_data: dict) -> Job:
     return job
 
 async def get_job(db: AsyncSession, job_id: int) -> Optional[Job]:
-    result = await db.execute(
+    result = db.execute(
         select(Job).where(Job.id == job_id)
     )
 

@@ -467,6 +467,15 @@ wheels = [
 ]
 
 [[package]]
+name = "fastapi-therapist"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e3/15/3669d54a69d386ce7921c7e588d3235f8584f451a143ef05131946c592f6/fastapi_therapist-0.1.0.tar.gz", hash = "sha256:cf142a4c8c3bf9ccdf8d072dcce610d2b6c5ed73c287ede5ede93b7573915e45", size = 15333 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fc/fc/f91f6ccab0ddad0ecaf1759ce6d5b578284320738b0a13fa7383bb65b9a3/fastapi_therapist-0.1.0-py3-none-any.whl", hash = "sha256:a8e3574f04fa5b046a3c2b53f82e4e75eaf77fd9c33b32ee3b847c335251c2f3", size = 20215 },
+]
+
+[[package]]
 name = "fastar"
 version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
@@ -692,6 +701,7 @@ dependencies = [
     { name = "asyncpg" },
     { name = "email-validator" },
     { name = "fastapi", extra = ["standard"] },
+    { name = "fastapi-therapist" },
     { name = "httpx" },
     { name = "mypy" },
     { name = "psycopg2-binary" },
@@ -716,6 +726,7 @@ requires-dist = [
     { name = "asyncpg", specifier = ">=0.31.0" },
     { name = "email-validator", specifier = ">=2.3.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.136.1" },
+    { name = "fastapi-therapist", specifier = ">=0.1.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "mypy", specifier = ">=2.1.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.12" },

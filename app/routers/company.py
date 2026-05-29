@@ -9,14 +9,19 @@ from ..auth.dependencies import get_current_user
 
 router = APIRouter(prefix="/company")
 
-@router.post("/create")
-async def create_company(data: CompanyCreate, db: AsyncSession = Depends(get_db), current_user = Depends(get_current_user)):
+
+@router.post("/create", status_code=status.HTTP_201_CREATED)
+async def create_company(
+    data: CompanyCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
     data_dict = data.model_dump()
 
     data_dict["owner_id"] = current_user.id
 
     company = Company(**data_dict)
-    db.add(company)
+    await db.add(company)
     await db.commit()
     await db.refresh(company)
     return company

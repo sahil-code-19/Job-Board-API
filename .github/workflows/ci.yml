@@ -2,7 +2,7 @@ name: CI workflow for our project
 
 on:
   push:
-    branches: [main, feature/phase-7-deployment-docker]
+    branches: [main, feature/phase-7-deployment-docker, testing-fastapi-therapist]
   pull_request:
     branches: [main]
 
