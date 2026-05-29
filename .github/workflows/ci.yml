@@ -36,7 +36,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install fastapi-therapist
-        run: pip install therapist
+        run: pip install fastapi-therapist
 
       - name: Run fastapi-therapist
         run: fastapi-therapist . --verbose
