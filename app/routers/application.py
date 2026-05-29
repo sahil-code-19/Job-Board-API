@@ -92,7 +92,7 @@ async def update_status(
     app_obj = await db.get(Application, id)
     old_status = app_obj.status
     app_obj.status = body.status
-    await db.commit()
+    db.commit()
     await db.refresh(app_obj)
 
     redis_client = request.app.state.redis
