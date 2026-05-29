@@ -24,6 +24,23 @@ jobs:
       - name: Run ruff
         run: ruff check .
 
+  fastapi-therapist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Checkout the python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install fastapi-therapist
+        run: pip install therapist
+
+      - name: Run fastapi-therapist
+        run: fastapi-therapist . --verbose
+
   test:
     runs-on: ubuntu-latest
     env:
@@ -46,6 +63,7 @@ jobs:
       - name: Run TEST
         run: pytest --cov=app
 
+
   docker:
     needs: [lint, test]
     runs-on: ubuntu-latest
@@ -55,5 +73,3 @@ jobs:
 
       - name: Run docker
         run: docker build -t job-board:latest .
-
-      
